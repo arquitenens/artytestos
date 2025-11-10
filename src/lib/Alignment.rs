@@ -9,7 +9,8 @@ pub enum AlignmentEnum {
 
 pub struct Alignment{
     pub align: AlignmentEnum,
-    pub _alignNBits: u16,
+    pub 
+    _alignNBits: u16,
 
 }
 

@@ -69,7 +69,8 @@ impl<T, A: Allocator> Vec<T, A> {
     ///Capacity is in bytes
     pub fn with_capacity(capacity: usize) -> Vec<T, A> {
         let mut inner = VecInner{
-            ptr: NonNull::dangling(),
+            ptr: NonNull
+            ::dangling(),
             capacity: 0,
             _alloc: PhantomData,
             _size: PhantomData,

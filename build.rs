@@ -9,6 +9,7 @@ fn linker_be_nice() {
     if args.len() > 1 {
         let kind = &args[1];
         let what = &args[2];
+        
 
         match kind.as_str() {
             "undefined-symbol" => match what.as_str() {

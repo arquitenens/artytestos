@@ -13,6 +13,7 @@ use esp_hal::gpio;
 use esp_hal::ram;
 use esp_hal::gpio::Level;
 use esp_hal::gpio::OutputConfig;
+
 use esp_hal::main;
 use esp_hal::time::{Duration, Instant};
 use log::info;

@@ -78,6 +78,7 @@ pub fn read_bit<T>(val: T, offset: usize) -> u8
 }
 
 
+
 pub fn write_int<T, V>(target: T, offset: usize, other: V)
     where T: BITS + Shl<u8, Output = V> + Shr<u8, Output = V> + PartialOrd,
           V: BITS + Shl<u8, Output = V> + Shr<u8, Output = V> + PartialOrd<T>

@@ -24,6 +24,7 @@ fn init_device() -> esp_hal::peripherals::Peripherals{
     esp_println::logger::init_logger_from_env();
     let config = esp_hal::Config::default().with_cpu_clock(CpuClock::_240MHz);
     return esp_hal::init(config)
+    
 }
 pub fn run() -> ! {
     let peripherals = init_device();

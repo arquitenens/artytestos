@@ -6,4 +6,5 @@ use log::info;
 fn panic(reason: &core::panic::PanicInfo) -> ! {
     info!("i paniced... wow, reason: {:?}", reason);
     loop {}
+    
 }

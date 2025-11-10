@@ -36,6 +36,7 @@ fn tag_int<T>(mut val: T, offset: usize, bit: BIT) -> T where T: BITS + BitAnd<u
     return val
 }
 
+
 #[cfg(test)]
 mod test {
     use log::info;
