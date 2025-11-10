@@ -6,14 +6,10 @@
     holding buffers for the duration of a data transfer."
 )]
 
-use core::hint::black_box;
-use esp_hal::xtensa_lx::get_stack_pointer;
 use esp_hal::clock::CpuClock;
 use esp_hal::gpio;
-use esp_hal::ram;
 use esp_hal::gpio::Level;
 use esp_hal::gpio::OutputConfig;
-use esp_hal::main;
 use esp_hal::time::{Duration, Instant};
 use esp_hal;
 use esp_println::println;
@@ -21,7 +17,6 @@ use log::info;
 use crate::{alloc, bits, vec};
 use crate::alignment::{Alignment, AlignmentEnum};
 use crate::alloc::{packed_heap_usable_size, Allocator, KiB, BYTE, HEAP_BLOCKS, STALLOC};
-use crate::bits::BIT;
 use crate::vec::{Vec};
 
 fn init_device() -> esp_hal::peripherals::Peripherals{
