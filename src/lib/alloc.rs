@@ -22,13 +22,6 @@ const SMALL_BUFFER: usize = 8;
 const HEAP_BLOCK_AMOUNT: usize = 5000; //change as needed i guess
 pub static mut HEAP_BLOCKS: [u8; HEAP_BLOCK_AMOUNT] = [0; HEAP_BLOCK_AMOUNT]; //list of all heap blocks
 
-#[repr(u8)]
-#[derive(Copy)]
-#[derive(Clone)]
-pub enum HeapBlock {
-    Free, //free block of memory
-    Reserved, //empty but reserved block of memory
-}
 
 pub const BYTE: usize = 1;
 pub const KiB: usize = BYTE * 1024;

@@ -9,3 +9,4 @@ pub mod code_sec;
 pub mod panic;
 pub mod alloc;
 pub mod bits;
+mod borrow;
