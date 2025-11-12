@@ -24,7 +24,7 @@ bench = false
 #path = "./src/test/test_temp_file.rs"
 
 [dependencies]
-esp-hal = { version = "1.0.0", features = ["esp32", "log-04"] }
+esp-hal = { version = "1.0.0", features = ["esp32", "log-04", "critical-section", "unstable"] }
 
 
 esp-bootloader-esp-idf = { version = "0.4.0", features = ["esp32", "log-04"] }

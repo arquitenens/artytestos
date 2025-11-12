@@ -8,26 +8,23 @@
 
 use esp_hal::clock::CpuClock;
 use esp_hal::gpio;
+use esp_hal::system::CpuControl;
 use esp_hal::gpio::Level;
 use esp_hal::gpio::OutputConfig;
 use esp_hal::time::{Duration, Instant};
 use esp_hal;
+use esp_hal::peripherals::Peripherals;
 use esp_println::println;
 use log::info;
-use crate::{alloc, bits, vec};
+use crate::{alloc, bits, vec, THREAD_HELPER};
 use crate::alignment::{Alignment, AlignmentEnum};
 use crate::alloc::{packed_heap_usable_size, Allocator, KiB, BYTE, HEAP_BLOCKS, STALLOC};
+use crate::thread::HelperThread;
 use crate::vec::{Vec};
 
-fn init_device() -> esp_hal::peripherals::Peripherals{
-    esp_bootloader_esp_idf::esp_app_desc!();
-    esp_println::logger::init_logger_from_env();
-    let config = esp_hal::Config::default().with_cpu_clock(CpuClock::_240MHz);
-    return esp_hal::init(config)
-    
-}
-pub fn run() -> ! {
-    let peripherals = init_device();
+
+
+pub fn run(peripherals: Peripherals) -> ! {
     let aligned_heap_start = unsafe {alloc::ALIGNED_HEAP_START};
     let aligned_heap_end = unsafe {alloc::ALIGNED_HEAP_END};
     let packed_heap_start = unsafe {alloc::PACKED_HEAP_START};
@@ -37,17 +34,20 @@ pub fn run() -> ! {
     let mut led = gpio::Output::new(peripherals.GPIO32, Level::Low, OutputConfig::default());
 
     
-    
+    let thread = unsafe {&mut THREAD_HELPER};
+    println!("thread: {:?}", unsafe {&thread.assume_init_mut().task});
     
     let mut vec: Vec<i32> = Vec::with_capacity(50);
     println!("before bc: {:?}", vec);
     
+    /*
     for i in 0..50{
         vec.push(i);
         vec[i as usize] = 67;
         println!("vec: {:?}", vec[i as usize]);
     }
-    
+   
+     */
     
     //let vec1: InnerVec<u32> = vec::InnerVec::new(alloc::StandardAllocator);
     //info!("Aligned_heap_start: {:?}", aligned_heap_start);
@@ -55,7 +55,8 @@ pub fn run() -> ! {
     //info!("packed_heap_start: {:?}", packed_heap_start);
     //info!("packed_heap_size {:?}", packed_heap_usable_size());
     //info!("packed_heap_end: {:?}", packed_heap_end);
-    info!("BLOCKS: {:?}", unsafe {alloc::HEAP_BLOCKS});
+    //info!("BLOCKS: {:?}", unsafe {alloc::HEAP_BLOCKS});
+    
     loop {
         unsafe {
             

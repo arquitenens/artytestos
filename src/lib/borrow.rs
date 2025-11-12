@@ -13,8 +13,6 @@ pub enum BorrowState{
     Shared(usize),
 }
 
-
-
 pub struct MemHandle<'handle, 'child, 'parent, V: 'child, P> 
     where 'parent: 'child,
           'child: 'handle
@@ -41,7 +39,7 @@ impl<'handle, 'child, 'parent, V, P> Drop for MemHandle<'handle, 'child, 'parent
 }
 
 impl<'handle, 'child, 'parent, V, P: crate::alloc::Allocator> MemHandle<'handle, 'child, 'parent, V, P>{
-    fn new(parent: NonNull<P>, mem: (*mut u8, usize), state: BorrowState)-> Self {
+    fn new(parent: NonNull<P>, mem: (*mut u8, usize), state: BorrowState) -> Self {
         return Self {
             state: BorrowState::Unshared,
             mem,

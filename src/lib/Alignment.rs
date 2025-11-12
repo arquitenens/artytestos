@@ -1,4 +1,5 @@
 #[derive(Clone)]
+#[derive(Debug)]
 pub enum AlignmentEnum {
     _align1 = 1,
     _align2 = 2,
