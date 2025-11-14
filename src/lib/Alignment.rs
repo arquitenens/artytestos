@@ -5,7 +5,8 @@ pub enum AlignmentEnum {
     _align2 = 2,
     _align4 = 4,
     _align8 = 8,
-    _align16 = 16
+    _align16 = 16,
+    _nil = 0,
 }
 
 pub struct Alignment{

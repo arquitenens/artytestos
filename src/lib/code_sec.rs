@@ -6,8 +6,14 @@
     holding buffers for the duration of a data transfer."
 )]
 
+use core::sync::atomic::{AtomicU8, Ordering};
+use core::ptr::slice_from_raw_parts;
+use crate::alloc;
+use core::any::TypeId;
+use core::intrinsics::type_id;
 use esp_hal::clock::CpuClock;
 use esp_hal::gpio;
+
 use esp_hal::system::CpuControl;
 use esp_hal::gpio::Level;
 use esp_hal::gpio::OutputConfig;
@@ -16,12 +22,11 @@ use esp_hal;
 use esp_hal::peripherals::Peripherals;
 use esp_println::println;
 use log::info;
-use crate::{alloc, bits, vec, THREAD_HELPER};
+use crate::thread;
 use crate::alignment::{Alignment, AlignmentEnum};
 use crate::alloc::{packed_heap_usable_size, Allocator, KiB, BYTE, HEAP_BLOCKS, STALLOC};
-use crate::thread::HelperThread;
+use crate::{core_input, thread::{HelperThread, ThreadState, CORE_STATE}};
 use crate::vec::{Vec};
-
 
 
 pub fn run(peripherals: Peripherals) -> ! {
@@ -32,30 +37,30 @@ pub fn run(peripherals: Peripherals) -> ! {
     
     
     let mut led = gpio::Output::new(peripherals.GPIO32, Level::Low, OutputConfig::default());
+    
+    //println!("Data before: {:?}", unsafe {&thread::CORE_DATA});
+    let load: [u32; 10] = [67; 10];
+    let cl = core_input!(u32, data, load, {
+        println!("t:{:?} ", const {type_id::<i32>()});
+            let safe_data = unsafe {&mut *data};
+            let x = safe_data;
+            x[0] = 50;
+            println!("HIII {:?}", x);
+        });
 
+    let mut thread = thread::HelperThread::new();
     
-    let thread = unsafe {&mut THREAD_HELPER};
-    println!("thread: {:?}", unsafe {&thread.assume_init_mut().task});
-    
-    let mut vec: Vec<i32> = Vec::with_capacity(50);
-    println!("before bc: {:?}", vec);
-    
-    /*
-    for i in 0..50{
-        vec.push(i);
-        vec[i as usize] = 67;
-        println!("vec: {:?}", vec[i as usize]);
-    }
-   
-     */
-    
-    //let vec1: InnerVec<u32> = vec::InnerVec::new(alloc::StandardAllocator);
-    //info!("Aligned_heap_start: {:?}", aligned_heap_start);
-    //info!("aligned_heap_end: {:?}", aligned_heap_end);
-    //info!("packed_heap_start: {:?}", packed_heap_start);
-    //info!("packed_heap_size {:?}", packed_heap_usable_size());
-    //info!("packed_heap_end: {:?}", packed_heap_end);
-    //info!("BLOCKS: {:?}", unsafe {alloc::HEAP_BLOCKS});
+    let t_cl = ||{
+        println!("Thread started");
+        CORE_STATE.store(1, Ordering::Release);
+    };
+    thread.execute(cl);
+    println!("CORE_STATE: {:?}", CORE_STATE.load(Ordering::Acquire));
+    println!("Data after: {:?}", unsafe {&thread::CORE_DATA});
+    println!("load: {:?}", load);
+    //t.state = ThreadState::Active;
+    //println!("state: {:?}", t.state);
+    let x: Vec<i32> = Vec::new();
     
     loop {
         unsafe {

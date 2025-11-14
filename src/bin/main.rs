@@ -7,6 +7,7 @@
     holding buffers for the duration of a data transfer."
 )]
 
+use esp_hal::system::CpuControl;
 use core::mem::MaybeUninit;
 use esp_hal::peripherals::Peripherals;
 use esp_hal::xtensa_lx::get_stack_pointer;
@@ -41,7 +42,7 @@ fn main() -> ! {
     let p = init_device();
     let cpu = unsafe {Peripherals::steal()};
     unsafe {
-        lib::THREAD_HELPER = MaybeUninit::new(HelperThread::init_thread(cpu.CPU_CTRL));
+        lib::APP_CORE_INIT = MaybeUninit::new(CpuControl::new(cpu.CPU_CTRL));
     }
     lib::code_sec::run(p);
 }
